@@ -45,13 +45,17 @@ def Add_Reservation():
     global User_Confirm
     global Row_Selection
     global Col_Selection
+    global Seat_ID
+    global Seat_Name
 
     while User_Confirm == False:
 
+        # User selects a row for their seat
         User_Input = input("\nPlease select a row (1-25): ")
         if int(User_Input) > 0 and int(User_Input) < 26:
             Row_Selection = int(User_Input)
 
+            # User selects a column for their seat
             while User_Confirm == False:
                 User_Input = input("Please select a column (A-D): ")
                 if User_Input.upper() == "A":
@@ -69,22 +73,24 @@ def Add_Reservation():
                 else:
                     print("Please select a valid column.")
                     input("Press 'enter' to continue.")
-            
             break
-
         else:
             print("Please enter a valid row.")
             input("Press 'enter' to continue.")
 
+    # Setting the seat ID
     Seat_ID = str(Row_Selection) + Col_Selection
 
-    Seat_Name = input("Please enter the name for the reservation: ")
+    # Checking if the Seat's ID is already in the dictionary
+    if Seat_ID in Reservations:
+        print("Seat " + Seat_ID + " is already reserved for " + Reservations.get(Seat_ID) + ".")
+    else:
+        Seat_Name = input("Please enter the name for the reservation: ")
+        print("\nSeat " + Seat_ID + " has been reserved for " + Seat_Name + ".")
+        Reservations[Seat_ID] = Seat_Name
 
-    print("\nSeat " + Seat_ID + " has been reserved for " + Seat_Name + ".")
-
-    Reservations[Seat_ID] = Seat_Name
-
-    print(Reservations)
+    # DEBUG
+    # print(Reservations)
 
     input("\nPress 'enter' to return to the main menu.")
 
@@ -94,6 +100,34 @@ def Del_Reservation():
     # Importing Global Variables
     global User_Input
     global User_Confirm
+    global Row_Selection
+    global Col_Selection
+    global Seat_ID
+    global Seat_Name
+
+    while User_Confirm == False:
+
+        Seat_ID = input("Please enter the Seat ID for the reservation that you would like to cancel: ")
+
+        if Seat_ID.upper() in Reservations:
+            User_Input = input("Cancel reservation for " + Reservations.get(Seat_ID.upper()) + "? (y/n): ")
+
+            while User_Confirm == False:
+
+                if User_Input.upper() == "Y":
+                    print("\nReservation for " + Reservations.get(Seat_ID.upper()) + " at seat " + Seat_ID.upper() + " has been canceled.")
+                    del Reservations[Seat_ID.upper()]
+                    break
+                elif User_Input.upper() == "N":
+                    break
+                else:
+                    print("\nPlease enter a valid selection.")
+            break
+        else:
+            print("\nThere is no reservation for this seat.")
+
+    # DEBUG
+    # print(Reservations)
 
     input("Press 'enter' to return to the main menu.")
 
